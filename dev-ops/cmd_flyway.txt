@@ -1,0 +1,6 @@
+06/7/2020
+
+
+mvn flyway:info
+mvn flyway:clean
+mvn flyway:migrate

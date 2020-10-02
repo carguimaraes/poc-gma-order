@@ -1,0 +1,26 @@
+dev_RBT_HOST: localhost
+dev_RBT_PORT: 5672
+
+server:
+  port: 8080
+ 
+spring:
+   application:
+      name: pocgma-ms-payment
+   rabbitmq:
+      host: ${RBT_HOST:${dev_RBT_HOST}}
+      port: ${RBT_PORT:${dev_RBT_PORT}}
+      username: pocgma
+      password: gma123 
+
+
+queue.order.paraaprovar: ORDER-PARA-APROVAR
+queue.order.aprovada: ORDER-APROVADA
+queue.order.rejeitada: ORDER-REJEITADA
+queue.order.paraembarque: ORDER-PARA-EMBARQUE
+queue.order.embarquefinalizado: ORDER-EMBARQUE-FINALIZADO
+ 
+  
+
+
+ 

@@ -1,0 +1,21 @@
+09/7/2020
+
+.1. PONTO DE PARTIDA
+ ir para o diretorio:  poc-best2bee/dev-ops
+
+.2.COMPILAR TODO PROJETO COM
+ ./mk_all.sh
+
+
+.3.levantar docker
+ docker-compose up -d
+ (para derrubar docker-compose down)
+
+.4.para iniciar o banco
+ ir para o diretorio poc-best2bee/ms-order
+ executar:
+
+ (info e clean é so pa informar e limpar )
+ mvn flyway:info
+ mvn flyway:clean
+ mvn flyway:migrate

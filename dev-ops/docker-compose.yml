@@ -1,0 +1,136 @@
+version: '3'
+
+networks: 
+  pocgma-network:
+    driver: bridge
+
+volumes:
+  pocgma-volume-db:
+    driver: local
+   
+services:
+  pocgma-srv-db:
+    image: postgres
+    container_name: pocgma-srv-db
+    environment:
+      POSTGRES_PASSWORD: "gma123"
+    ports:
+      - "15432:5432"
+    volumes:
+      - pocgma-volume-db:/var/lib/postgresql/data
+    networks:
+      - pocgma-network
+  
+      
+  pocgma-srv-pgadmin:
+    image: dpage/pgadmin4
+    container_name: pocgma-srv-pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "postgres@pocgma"
+      PGADMIN_DEFAULT_PASSWORD: "gma123"
+    ports:
+      - "16543:80"
+    depends_on:
+      - pocgma-srv-db
+    networks:
+      - pocgma-network
+
+
+  pocgma-discovery-server:
+    image: pocgma-discovery:0.1.0 
+    container_name: pocgma-discovery-server
+    ports:
+      - "8762:8761"
+    depends_on:
+      - pocgma-srv-db
+    networks:
+      - pocgma-network
+
+  
+  pocbest2bee-rabbitmq:
+        image: "rabbitmq:management-alpine"
+        container_name: pocgma-rabbitmq
+        environment:
+            RABBITMQ_DEFAULT_USER: "pocgma"
+            RABBITMQ_DEFAULT_PASS: "gma123"
+        ports:
+            - 5672:5672
+            - 15672:15672
+        networks:
+         - pocgma-network
+
+  pocgma-bff-web-server:
+    image: pocgma-bff-web:0.1.0 
+    container_name: pocgma-bff-web-server
+    environment:
+      DISCOVERY: http://pocgma-discovery-server:8761
+    ports:
+      - "8080:8080"
+    depends_on:
+      - pocgma-discovery-server
+      - pocgma-rabbitmq
+    networks:
+      - pocgma-network
+
+
+
+#-----------------------------------------------------------------------
+#- MSERVICE
+#-----------------------------------------------------------------------
+
+  pocgma-ms-usuario:
+    image: pocgma-ms-order:0.1.0 
+    container_name: pocgma-ms-order
+    environment:
+      DB_URL: "jdbc:postgresql://pocgma-srv-db:5432/postgres"
+      DB_USER: "postgres"
+      DB_PSW: "gma123"
+      DISCOVERY: http://pocgma-discovery-server:8761
+      RBT_HOST: pocgma-rabbitmq
+      RBT_PORT: 5672
+      RBT_USER: "pocgma"
+      RBT_PSWD: "gma123"
+#    ports:
+#      - "8082:8080"
+    depends_on:
+      - pocgma-srv-db 
+      - pocgma-discovery-server
+      - pocgma-rabbitmq
+    networks:
+      - pocgma-network
+
+
+  pocgma-ms-payment:
+    image: pocgma-ms-payment:0.1.0 
+    container_name: pocgma-ms-payment
+    environment:
+      RBT_HOST: pocgma-rabbitmq
+      RBT_PORT: 5672
+      RBT_USER: "pocgma"
+      RBT_PSWD: "gma123"
+#    ports:
+#      - "8083:8080"
+    depends_on:
+      - pocgma-rabbitmq 
+    networks:
+      - pocgma-network
+
+
+  pocgma-ms-shipping:
+    image: pocgma-ms-shipping:0.1.0 
+    container_name: pocgma-ms-shipping
+    environment:
+      RBT_HOST: pocgma-rabbitmq
+      RBT_PORT: 5672
+      RBT_USER: "pocgma"
+      RBT_PSWD: "gma123"
+#    ports:
+#      - "8084:8080"
+    depends_on:
+      - pocgma-rabbitmq 
+    networks:
+      - pocgma-network
+
+
+
+   

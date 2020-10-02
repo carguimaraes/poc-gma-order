@@ -1,0 +1,30 @@
+curl -X POST \
+  http://localhost:8080/api/v1/orders \
+  -H 'cache-control: no-cache' \
+  -H 'content-type: application/json' \
+  -H 'postman-token: 954ea453-2695-f1c7-5e95-a8ce54b84f03' \
+  -d '{
+	
+	"nome":"order-02",
+	"observacao": "teste obs",
+	"customer":{  
+		"id": 2	
+
+	},
+	"paymentDetails":{
+		"id":3
+	
+	},
+	
+	"orderItems": [  
+		
+		{  "id":1, "nome": "p01A" , "product": {"id":1 }  },
+		{  "id":2, "nome": "p02B" , "product": {"id":4 }  } 	
+	
+	
+	
+	]
+	
+	
+}'	
+

@@ -1,0 +1,47 @@
+
+dev_DB_URL: jdbc:postgresql://localhost:15432/postgres
+dev_DB_USER: postgres
+dev_DB_PSW: gma123
+dev_DISCOVERY: http://127.0.0.1:8762
+
+dev_RBT_HOST: localhost
+dev_RBT_PORT: 5672
+dev_RBT_USER: pocbest2bee
+dev_RBT_PSWD: gma123 
+
+server:
+  port: 8080
+ 
+spring:
+   application:
+      name: pocbest2bee-ms-order
+   jpa:
+      show-sql: true
+      
+   datasource:
+      url: ${DB_URL:${dev_DB_URL}}
+      driver-class-name: org.postgresql.Driver
+      username: ${DB_USER:${dev_DB_USER}}
+      password: ${DB_PSW:${dev_DB_PSW}}
+   rabbitmq:
+      host: ${RBT_HOST:${dev_RBT_HOST}}
+      port: ${RBT_PORT:${dev_RBT_PORT}}
+      username: ${RBT_USER:${dev_RBT_USER}}  
+      password: ${RBT_PSWD:${dev_RBT_PSWD}}
+
+  
+queue.order.paraaprovar: ORDER-PARA-APROVAR
+queue.order.aprovada: ORDER-APROVADA
+queue.order.rejeitada: ORDER-REJEITADA
+queue.order.paraembarque: ORDER-PARA-EMBARQUE
+queue.order.embarquefinalizado: ORDER-EMBARQUE-FINALIZADO
+
+
+eureka:
+  client:
+    registerWithEureka: true
+    fetchRegistry: true
+    serviceUrl:
+      defaultZone: ${DISCOVERY:${dev_DISCOVERY}}/eureka/
+  instance:
+    preferIpAddress: true

@@ -1,0 +1,32 @@
+dev_DISCOVERY: http://127.0.0.1:8762
+
+server:
+  port: 8080
+ 
+spring:
+   application:
+      name: pocgma-bff-web-server
+    
+
+#eureka:
+# instance:
+#   hostname: ${DISCOVERY:${dev_DISCOVERY}}
+
+zuul:
+ prefix: /api
+ ignored-services: '*'
+ routes:
+   customers:
+     path: /v1/orders/**
+     serviceId: pocgma-ms-order
+     strip-prefix: false
+
+
+eureka:
+  client:
+    registerWithEureka: false
+    fetchRegistry: true
+    serviceUrl:
+      defaultZone: ${DISCOVERY:${dev_DISCOVERY}}/eureka/
+  instance:
+    preferIpAddress: true
